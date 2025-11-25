@@ -73,15 +73,18 @@ export default function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
-                    {previewUrl ? (
-                        <img src={previewUrl} alt={post.title} className="rounded-xl"  />
-                    ) : null}
-        
+                <div className="w-full mb-4">
+                    <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2 bg-white">
+                        {previewUrl ? (
+                            <img src={previewUrl} alt={post.title} className="rounded-xl w-full h-96 object-cover"  />
+                        ) : (
+                            <div className="w-full h-96 bg-gray-300 rounded-xl flex items-center justify-center">No Image</div>
+                        )}
+                    </div>
                     {isAuthor && (
-                        <div className="absolute right-6 top-6">
+                        <div className="flex gap-3 mt-2">
                             <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
+                                <Button bgColor="bg-green-500">
                                     Edit
                                 </Button>
                             </Link>

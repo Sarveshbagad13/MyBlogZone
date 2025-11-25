@@ -22,12 +22,16 @@ function App() {
     .finally(() => setLoading(false))
   }, [])
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-600 '>
-      <div className='w-full block'>
+    <div className='min-h-screen w-screen flex flex-col bg-linear-to-b from-blue-900 to-purple-900'>
+      <header className='w-full'>
         <Header/>
+      </header>
+      <main className='flex-1 w-full px-4 py-3'>
         <Outlet/>
+      </main>
+      <footer className='w-full mt-auto'>
         <Footer/>
-      </div>
+      </footer>
     </div>
   ) : null
 }
