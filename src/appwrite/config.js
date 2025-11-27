@@ -14,19 +14,18 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId}){
+    async createPost({title, slug, content, featuredImage, status, userid}){
         try {
             const payload = {
                 title,
                 content,
                 status,
+                userid,
             };
 
             const effectiveFeatured = featuredImage || undefined;
-            const effectiveUserId = userId || undefined;
 
             if (effectiveFeatured) payload.featuredimage = effectiveFeatured;
-            if (effectiveUserId) payload.userid = effectiveUserId;
 
             console.log('Appwrite Service :: createPost payload', payload)
 
@@ -42,12 +41,13 @@ export class Service{
         }
     }
 
-    async updatePost(slug, {title, content, featuredImage, status}){
+    async updatePost(slug, {title, content, featuredImage, status, userid}){
         try {
             const payload = {
                 title,
                 content,
                 status,
+                userid,
             };
 
             const effectiveFeatured = featuredImage || undefined;
@@ -178,6 +178,24 @@ export class Service{
 
         } catch (error) {
             console.log('Appwrite service :: getFilePreview :: error', error);
+            return null;
+        }
+    }
+
+    getFilePreviewUrl(fileId) {
+        if (!fileId) return null;
+
+        const id = typeof fileId === "object" ? fileId.$id || null : fileId;
+        if (!id) return null;
+
+        try {
+            const urlObj = this.bucket.getFilePreview(
+                conf.appwriteBucketId,
+                id
+            );
+            return urlObj.toString();
+        } catch (error) {
+            console.log('Appwrite service :: getFilePreviewUrl :: error', error);
             return null;
         }
     }

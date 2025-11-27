@@ -6,36 +6,16 @@ function PostCard({$id, title, featuredImage, featuredimage}) {
     const [previewUrl, setPreviewUrl] = useState(null);
 
     useEffect(() => {
-        let currentUrl = null;
-        async function loadPreview() {
-            const raw = featuredimage ?? featuredImage;
-            const fileId = raw && typeof raw === 'object' ? raw.$id || null : raw;
+        const raw = featuredimage ?? featuredImage;
+        const fileId = raw && typeof raw === 'object' ? raw.$id || null : raw;
 
-            if (!fileId) {
-                setPreviewUrl(null);
-                return;
-            }
-
-            try {
-                const blob = await appwriteService.getFilePreview(fileId);
-                if (!blob) {
-                    setPreviewUrl(null);
-                    return;
-                }
-
-                currentUrl = URL.createObjectURL(blob);
-                setPreviewUrl(currentUrl);
-            } catch (err) {
-                console.log('PostCard :: preview load error', err);
-                setPreviewUrl(null);
-            }
+        if (fileId) {
+            // Use getFilePreview to get the URL directly
+            const previewUrl = appwriteService.getFilePreviewUrl(fileId);
+            setPreviewUrl(previewUrl);
+        } else {
+            setPreviewUrl(null);
         }
-
-        loadPreview();
-
-        return () => {
-            if (currentUrl) URL.revokeObjectURL(currentUrl);
-        };
     }, [featuredImage, featuredimage]);
     
   return (
@@ -44,7 +24,9 @@ function PostCard({$id, title, featuredImage, featuredimage}) {
             <div className='w-full justify-center mb-4'>
                 {previewUrl ? (
                     <img src={previewUrl} alt={title} className='w-full h-40 object-cover rounded-xl' />
-                ) : null}
+                ) : (
+                    <div className='w-full h-40 bg-gray-300 rounded-xl flex items-center justify-center'>No Image</div>
+                )}
 
             </div>
             <h2
