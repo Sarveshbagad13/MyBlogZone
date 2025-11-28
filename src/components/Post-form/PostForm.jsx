@@ -39,21 +39,31 @@ export default function PostForm({ post }) {
                 navigate(`/post/${dbPost.$id}`);
             }
         } else {
+            if (!userData || !userData.$id) {
+                alert('User not authenticated. Please login first.');
+                return;
+            }
+
             const file = await appwriteService.uploadFile(data.image[0]);
 
             if (file) {
                 const fileId = file.$id;
-                const dbPost = await appwriteService.createPost({
-                    title: data.title,
-                    slug: data.slug,
-                    content: data.content,
-                    status: data.status,
-                    userid: userData?.$id,
-                    featuredImage: fileId,
-                });
+                try {
+                    const dbPost = await appwriteService.createPost({
+                        title: data.title,
+                        slug: data.slug,
+                        content: data.content,
+                        status: data.status,
+                        userid: userData.$id,
+                        featuredImage: fileId,
+                    });
 
-                if (dbPost) {
-                    navigate(`/post/${dbPost.$id}`);
+                    if (dbPost) {
+                        navigate(`/post/${dbPost.$id}`);
+                    }
+                } catch (error) {
+                    console.error('Error creating post:', error);
+                    alert('Error creating post: ' + error.message);
                 }
             }
         }

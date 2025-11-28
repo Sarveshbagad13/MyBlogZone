@@ -22,7 +22,7 @@ function App() {
     .finally(() => setLoading(false))
   }, [])
   return !loading ? (
-    <div className='min-h-screen w-screen flex flex-col bg-linear-to-b from-blue-900 to-purple-900'>
+    <div className='min-h-screen w-screen flex flex-col bg-[#CFFCFF]'>
       <header className='w-full'>
         <Header/>
       </header>

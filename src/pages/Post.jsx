@@ -16,6 +16,14 @@ export default function Post() {
     const isAuthor = post && userData ? (post.userid ?? post.userId) === userData.$id : false;
 
     useEffect(() => {
+        console.log('Post:', post);
+        console.log('User Data:', userData);
+        console.log('Post userid:', post?.userid ?? post?.userId);
+        console.log('User $id:', userData?.$id);
+        console.log('Is Author:', isAuthor);
+    }, [post, userData, isAuthor]);
+
+    useEffect(() => {
         if (slug) {
             appwriteService.getPost(slug).then((post) => {
                 if (post) setPost(post);
@@ -81,18 +89,20 @@ export default function Post() {
                             <div className="w-full h-96 bg-gray-300 rounded-xl flex items-center justify-center">No Image</div>
                         )}
                     </div>
-                    {isAuthor && (
+                    {isAuthor ? (
                         <div className="flex gap-3 mt-2">
                             <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500">
+                                <Button bgColor="bg-green-500" className="px-6 py-2">
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button bgColor="bg-red-500" onClick={deletePost} className="px-6 py-2">
                                 Delete
                             </Button>
                         </div>
-                    )}
+                    ) : userData ? (
+                        <p className="text-sm text-gray-600 mt-2">You are not the author of this post</p>
+                    ) : null}
                 </div>
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
